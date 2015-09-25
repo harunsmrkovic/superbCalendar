@@ -27,6 +27,20 @@ module.exports = function (grunt) {
     // Project settings
     yeoman: appConfig,
 
+    angularTemplateCache: {
+      options: {
+        module: 'superbCalendar'
+      },
+      defaultOptions: {
+        src: 'views/**/*.html',
+        dest: 'app/scripts/templates.js',
+        cwd: '<%= yeoman.app %>'
+      },
+      htmlminNull: {
+        collapseWhitespace: true
+      }
+    },
+
     // Watches files for changes and runs tasks based on the changed files
     watch: {
       bower: {
@@ -454,6 +468,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
+    'angularTemplateCache',
     'wiredep',
     'useminPrepare',
     'concurrent:dist',
