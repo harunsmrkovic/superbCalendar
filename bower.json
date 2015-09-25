@@ -9,7 +9,7 @@
     "angular-mocks": "^1.3.0"
   },
   "main": [
-    "app/"
+    "dist/scripts/superbcalendar.js"
   ],
   "repository": {
     "type": "git",
