@@ -9,10 +9,8 @@
   },
   "main": "./dist/scripts/superbcalendar.js",
   "ignore": [
-    "./app",
     "images",
-    "test",
-    "./Gruntfile.js"
+    "test"
   ],
   "repository": {
     "type": "git",
