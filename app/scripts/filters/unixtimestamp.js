@@ -8,7 +8,7 @@
  * # unixtimestamp
  * Filter in the superbCalendarApp.
  */
-angular.module('superbCalendarApp')
+angular.module('superbCalendar')
   .filter('unixtimestamp', function () {
     return function (input) {
       if(input){
