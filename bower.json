@@ -12,6 +12,5 @@
     "type": "git",
     "url": "git://github.com/harunsmrkovic/superbCalendar.git"
   },
-  "appPath": "app",
   "moduleName": "superbCalendar"
 }
