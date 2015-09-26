@@ -1,12 +1,12 @@
 <div class="superb-calendar">
   <div class="days-wrap" ng-repeat="(monthNumber, month) in calendar" ng-show="monthNumber == currentMonth">
-    <div class="day"><span>P<span class="hidden-xs">on</span></span></div>
-    <div class="day"><span>U<span class="hidden-xs">to</span></span></div>
-    <div class="day"><span>S<span class="hidden-xs">ri</span></span></div>
-    <div class="day"><span>Č<span class="hidden-xs">et</span></span></div>
-    <div class="day"><span>P<span class="hidden-xs">et</span></span></div>
-    <div class="day"><span>S<span class="hidden-xs">ub</span></span></div>
-    <div class="day"><span>N<span class="hidden-xs">ed</span></span></div>
+    <div class="day"><span>M<span class="hidden-xs">on</span></span></div>
+    <div class="day"><span>T<span class="hidden-xs">ue</span></span></div>
+    <div class="day"><span>W<span class="hidden-xs">ed</span></span></div>
+    <div class="day"><span>T<span class="hidden-xs">hu</span></span></div>
+    <div class="day"><span>F<span class="hidden-xs">ri</span></span></div>
+    <div class="day"><span>S<span class="hidden-xs">at</span></span></div>
+    <div class="day"><span>S<span class="hidden-xs">un</span></span></div>
     <br>
     <span ng-repeat="date in month"
       class="date {{(((date.date | unixtimestamp) > (rangeStartDate.date | unixtimestamp)) && ((date.date | unixtimestamp) < (hoveringOnDay.date | unixtimestamp))) ? 'hovered-in-range' : ''}}"
