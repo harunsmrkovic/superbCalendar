@@ -9,34 +9,48 @@ $gray:            #C4C4C4;
 
 .superb-calendar {
   position: relative;
-  display: block;
-  width: 100%;
+  margin: 30px 0;
   .days-wrap {
+    border-left: 1px solid $superlightgray;
     .day {
+      border: 1px solid $superlightgray;
+      border-left: none;
       float: left;
-      padding: 0 10px;
+      padding: 10px 0;
+      width: 14%;
+      text-align: center;
+      background: $lightpurple;
     }
     display: block;
   }
   .date {
     width: 14%;
     float: left;
-    padding: 10px;
+    padding: 10px 0;
+    text-align: center;
     cursor: pointer;
-    &.next-or-prev-month {
-      opacity: 0.5;
-    }
-    &.selected {
-      background: $superpurple;
-    }
+    border-bottom: 1px solid $superlightgray;
+    border-right: 1px solid $superlightgray;
     &.hovered-in-range, &.in-range {
       background: $lightpurple;
     }
     &:hover {
-      background: $lightgray;
+      background: $lightpurple;
+    }
+    &.selected {
+      background: $superpurple;
+      color: #fff;
+    }
+    &.next-or-prev-month, &.unavailable {
+      background: $superlightgray;
+      color: $gray;
+      &:hover {
+        background: $superlightgray;
+      }
     }
     &.unavailable {
-      color: red;
+      cursor: not-allowed;
+      text-decoration: line-through;
     }
   }
 }
