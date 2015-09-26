@@ -120,7 +120,7 @@ angular.module('superbCalendar')
       });
     });
 
-    if($scope.excludedDates.length){
+    if($scope.excludedDates){
       angular.forEach($scope.excludedDates, function(eDate){
         var startingDateTS = Date.parse(eDate.startDate);
         var endingDateTS = Date.parse(eDate.endDate);
