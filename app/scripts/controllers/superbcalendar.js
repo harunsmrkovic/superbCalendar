@@ -100,6 +100,14 @@ angular.module('superbCalendar')
         var startingDateTS = Date.parse(range.startDate);
         var endingDateTS = Date.parse(range.endDate);
 
+        // safe check to see if user misbehaved and switched places for start and end date :)
+        if(startingDateTS > endingDateTS){
+          var tempDate = startingDateTS;
+          startingDateTS = endingDateTS;
+          endingDateTS = tempDate;
+          tempDate = undefined;
+        }
+
         // month
         var startingMonth = getMonthFromString(range.startDate);
         var endingMonth = getMonthFromString(range.endDate);
