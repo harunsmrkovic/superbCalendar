@@ -20,7 +20,7 @@
     <![endif]-->
 
     <div id="debug-wrap" ng-controller="debugCtrl">
-      <superb-calendar selected-dates="bookingCalendar.ranges" multiple-dates="true" allow-range="true"></superb-calendar>
+      <superb-calendar selected-dates="bookingCalendar.dates" excluded-dates="bookingCalendar.busyDates" multiple-dates="true" allow-range="true"></superb-calendar>
       <br class="clb">
       <hr>
       <pre>{{bookingCalendar}}</pre>

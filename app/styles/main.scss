@@ -35,6 +35,9 @@ $gray:            #C4C4C4;
     &:hover {
       background: $lightgray;
     }
+    &.unavailable {
+      color: red;
+    }
   }
 }
 
