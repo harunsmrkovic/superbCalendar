@@ -80,17 +80,8 @@ angular.module('superbCalendar')
       return dates;
     }
 
-    function clearSelectedDays(){
+    function clearSelectedDates(){
       $scope.selectedDates = [];
-      angular.forEach($scope.calendar, function(month){
-        angular.forEach(month, function(day){
-          day.selected = false;
-        });
-      });
-    }
-
-    function clearSelectedRanges(){
-      $scope.selectedRanges = [];
       angular.forEach($scope.calendar, function(month){
         angular.forEach(month, function(day){
           day.selected = false;
@@ -99,42 +90,46 @@ angular.module('superbCalendar')
       });
     }
 
-    function getMonthFromString(dateString){
-      return parseInt(dateString.split('-')[1]);
-    }
-
     // initialization of calendar (only the initial month is generated)
     $scope.calendar = {};
     $scope.calendar[$scope.currentYear+'-'+$scope.currentMonth] = rawDaysInMonth($scope.currentMonth, $scope.currentYear);
 
     // ranges are initialized here and this object shall be used when sending them to API
-    $scope.$watchCollection('selectedRanges', function(ranges){
+    $scope.$watchCollection('selectedDates', function(ranges){
       angular.forEach(ranges, function(range){
         // js date
-        var startingDateTS = Date.parse(range.startDate);
-        var endingDateTS = Date.parse(range.endDate);
+        if((range.startDate && range.endDate) || range.date){
+          var startingDateTS = Date.parse(range.startDate);
+          var endingDateTS = Date.parse(range.endDate);
 
-        // safe check to see if user misbehaved and switched places for start and end date :)
-        if(startingDateTS > endingDateTS){
-          var tempDate = startingDateTS;
-          startingDateTS = endingDateTS;
-          endingDateTS = tempDate;
-          tempDate = undefined;
-        }
+          if(range.date){
+            startingDateTS = Date.parse(range.date);
+            endingDateTS = startingDateTS;
+          }
+          else {
+            // safe check to see if user misbehaved and switched places for start and end date :)
+            if(startingDateTS > endingDateTS){
+              var tempDate = startingDateTS;
+              startingDateTS = endingDateTS;
+              endingDateTS = tempDate;
+              tempDate = undefined;
+            }
+          }
 
-        // go through calendar and apply in-range flag wherever aplicable
-        angular.forEach($scope.calendar, function(month){
-          var dayInQ;
-          angular.forEach(month, function(day){
-            dayInQ = Date.parse(day.date);
-            if(startingDateTS === dayInQ || endingDateTS === dayInQ){
-              day.selected = true;
-            }
-            else if(startingDateTS < dayInQ && dayInQ < endingDateTS){
-              day.inRange = true;
-            }
+          // go through calendar and apply in-range flag wherever aplicable
+          angular.forEach($scope.calendar, function(month){
+            var dayInQ;
+            angular.forEach(month, function(day){
+              dayInQ = Date.parse(day.date);
+              if(startingDateTS === dayInQ || endingDateTS === dayInQ){
+                day.selected = true;
+              }
+              else if(startingDateTS < dayInQ && dayInQ < endingDateTS){
+                day.inRange = true;
+              }
+            });
           });
-        });
+        }
       });
     });
 
@@ -167,49 +162,64 @@ angular.module('superbCalendar')
       }
 
       // managing range
-      if($scope.selectedRanges){
+      if($scope.selectedDates){
         // if no multiple range is supported, and some is already selected, clear it!
-        if(!$scope.multipleRanges && $scope.selectedRanges.length >= 1){
-          clearSelectedRanges();
+        if(!$scope.multipleDates && $scope.selectedDates.length >= 1){
+          clearSelectedDates();
         }
 
         // make the range selection
-        if(!$scope.rangeStartDate){
+        if($scope.allowRange && !$scope.rangeStartDate){
           date.selected = true;
           $scope.rangeStartDate = date;
         }
         else {
-          $scope.selectedRanges.push({startDate: $scope.rangeStartDate.date, endDate: date.date});
+          // either not a range (because start and end are same) or no range allowed, hence single date
+          if(($scope.allowRange && $scope.rangeStartDate.date === date.date) || !$scope.allowRange){
+            // check, if this date is already defined, now delete it
+            var alreadyPushed = $scope.selectedDates.indexOf(date);
+            if(~alreadyPushed){
+              $scope.selectedDates.splice(alreadyPushed, 1);
+              date.selected = false;
+            }
+            else {
+              $scope.selectedDates.push(date);
+            }
+          }
+          // last date of range (push it!)
+          else {
+            $scope.selectedDates.push({startDate: $scope.rangeStartDate.date, endDate: date.date});
+          }
           delete $scope.rangeStartDate;
         }
       }
       // TODO: this should not be exclusive to one-another, but instead should be possible to have both range and single date (idea: make range doable by click-and-drag)
-      else if($scope.selectedDates) {
-        // if multiple, then manage the array
-        // TODO: can be rewritten in a shorter if
-        if($scope.multipleDates){
-          var alreadyPushed = $scope.selectedDates.indexOf(date);
-          if(~alreadyPushed){
-            date.selected = false;
-            $scope.selectedDates.splice(alreadyPushed, 1);
-          }
-          else {
-            // make it selected!
-            date.selected = true;
-            $scope.selectedDates.push(date);
-          }
-        }
-        else {
-          // if multiple dates are not supported, clear all days
-          clearSelectedDays();
-          date.selected = true;
-          $scope.selectedDates.push(date);
-        }
-      }
+      // else if($scope.selectedDates) {
+      //   // if multiple, then manage the array
+      //   // TODO: can be rewritten in a shorter if
+      //   if($scope.multipleDates){
+      //     var alreadyPushed = $scope.selectedDates.indexOf(date);
+      //     if(~alreadyPushed){
+      //       date.selected = false;
+      //       $scope.selectedDates.splice(alreadyPushed, 1);
+      //     }
+      //     else {
+      //       // make it selected!
+      //       date.selected = true;
+      //       $scope.selectedDates.push(date);
+      //     }
+      //   }
+      //   else {
+      //     // if multiple dates are not supported, clear all days
+      //     clearSelectedDays();
+      //     date.selected = true;
+      //     $scope.selectedDates.push(date);
+      //   }
+      // }
     };
 
     $scope.hoveringDate = function(date){
-      if($scope.selectedRanges && $scope.rangeStartDate){
+      if($scope.selectedDates && $scope.rangeStartDate){
         $scope.hoveringOnDay = date;
       }
     };
@@ -227,7 +237,7 @@ angular.module('superbCalendar')
 angular.module('superbCalendar')
   .controller('debugCtrl', function($scope, $log){
     $scope.bookingCalendar = {
-      ranges: [{startDate:'2015-09-19', endDate:'2015-09-23'}],
+      ranges:  [{startDate: "2015-09-25",endDate: "2015-09-26"},{date: "2015-09-29"},{startDate: "2015-09-30",endDate: "2015-10-08"}],
       dates: []
     };
   });
@@ -247,9 +257,8 @@ angular.module('superbCalendar')
       restrict: 'E',
       scope: {
         initialDate: '@', // start from this date (Y-m-d)
-        selectedRanges: '=', // array holding all the selected ranges
-        multipleRanges: '@', // flag determining if multiple ranges are supported (true/ empty)
         selectedDates: '=', // array holding all the selected single dates
+        allowRange: '@',
         multipleDates: '@'// flag determining if multiple single dates are supported (true/ empty)
       },
       controller: 'superbCalendarCtrl',
