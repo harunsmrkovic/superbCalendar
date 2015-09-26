@@ -169,6 +169,9 @@ angular.module('superbCalendar')
         $scope.showNextMonth();
         return;
       }
+      else if(date.unavailable){
+        return;
+      }
 
       // managing range
       if($scope.selectedDates){
