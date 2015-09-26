@@ -133,6 +133,28 @@ angular.module('superbCalendar')
       });
     });
 
+    if($scope.excludedDates.length){
+      angular.forEach($scope.excludedDates, function(eDate){
+        var startingDateTS = Date.parse(eDate.startDate);
+        var endingDateTS = Date.parse(eDate.endDate);
+
+        if(eDate.date){
+          startingDateTS = Date.parse(eDate.date);
+          endingDateTS = startingDateTS;
+        }
+
+        angular.forEach($scope.calendar, function(month){
+          var dayInQ;
+          angular.forEach(month, function(day){
+            dayInQ = Date.parse(day.date);
+            if(startingDateTS <= dayInQ && dayInQ <= endingDateTS){
+              day.unavailable = true;
+            }
+          });
+        });
+      });
+    }
+
     $scope.showPrevMonth = function(){
       $scope.currentMonth--;
       if($scope.currentMonth === 0){
@@ -193,29 +215,6 @@ angular.module('superbCalendar')
           delete $scope.rangeStartDate;
         }
       }
-      // TODO: this should not be exclusive to one-another, but instead should be possible to have both range and single date (idea: make range doable by click-and-drag)
-      // else if($scope.selectedDates) {
-      //   // if multiple, then manage the array
-      //   // TODO: can be rewritten in a shorter if
-      //   if($scope.multipleDates){
-      //     var alreadyPushed = $scope.selectedDates.indexOf(date);
-      //     if(~alreadyPushed){
-      //       date.selected = false;
-      //       $scope.selectedDates.splice(alreadyPushed, 1);
-      //     }
-      //     else {
-      //       // make it selected!
-      //       date.selected = true;
-      //       $scope.selectedDates.push(date);
-      //     }
-      //   }
-      //   else {
-      //     // if multiple dates are not supported, clear all days
-      //     clearSelectedDays();
-      //     date.selected = true;
-      //     $scope.selectedDates.push(date);
-      //   }
-      // }
     };
 
     $scope.hoveringDate = function(date){
@@ -237,7 +236,7 @@ angular.module('superbCalendar')
 angular.module('superbCalendar')
   .controller('debugCtrl', function($scope, $log){
     $scope.bookingCalendar = {
-      ranges:  [{startDate: "2015-09-25",endDate: "2015-09-26"},{date: "2015-09-29"},{startDate: "2015-09-30",endDate: "2015-10-08"}],
+      busyDates: [{startDate: "2015-09-25",endDate: "2015-09-26"},{date: "2015-09-29"},{startDate: "2015-09-30",endDate: "2015-10-08"}],
       dates: []
     };
   });
@@ -257,9 +256,10 @@ angular.module('superbCalendar')
       restrict: 'E',
       scope: {
         initialDate: '@', // start from this date (Y-m-d)
-        selectedDates: '=', // array holding all the selected single dates
+        selectedDates: '=', // array holding all the selected single dates and ranges
         allowRange: '@',
-        multipleDates: '@'// flag determining if multiple single dates are supported (true/ empty)
+        multipleDates: '@',
+        excludedDates: '='
       },
       controller: 'superbCalendarCtrl',
       link: function postLink(scope, element, attrs) {
@@ -271,7 +271,7 @@ angular.module('superbCalendar')
 
 angular.module('superbCalendar').
 run(['$templateCache', function($templateCache) {
-  $templateCache.put('views/_calendar.html', '<div class="superb-calendar"><div class="days-wrap" ng-repeat="(monthNumber, month) in calendar" ng-show="monthNumber == currentYear+\'-\'+currentMonth"><div class="day"><span>M<span class="hidden-xs">on</span></span></div><div class="day"><span>T<span class="hidden-xs">ue</span></span></div><div class="day"><span>W<span class="hidden-xs">ed</span></span></div><div class="day"><span>T<span class="hidden-xs">hu</span></span></div><div class="day"><span>F<span class="hidden-xs">ri</span></span></div><div class="day"><span>S<span class="hidden-xs">at</span></span></div><div class="day"><span>S<span class="hidden-xs">un</span></span></div><br><span ng-repeat="date in month" class="date {{(((date.date | unixtimestamp) > (rangeStartDate.date | unixtimestamp)) && ((date.date | unixtimestamp) < (hoveringOnDay.date | unixtimestamp))) ? \'hovered-in-range\' : \'\'}}" ng-class="{\'next-or-prev-month\': date.nextMonth || date.prevMonth, \'selected\': date.selected, \'in-range\': date.inRange}" ng-click="clickedDate(date)" ng-mouseover="hoveringDate(date)"><span>{{date.date | date: \'d\' }}</span></span><div class="clearfix"></div><hr></div></div>');
+  $templateCache.put('views/_calendar.html', '<div class="superb-calendar"><div class="days-wrap" ng-repeat="(monthNumber, month) in calendar" ng-show="monthNumber == currentYear+\'-\'+currentMonth"><div class="day"><span>M<span class="hidden-xs">on</span></span></div><div class="day"><span>T<span class="hidden-xs">ue</span></span></div><div class="day"><span>W<span class="hidden-xs">ed</span></span></div><div class="day"><span>T<span class="hidden-xs">hu</span></span></div><div class="day"><span>F<span class="hidden-xs">ri</span></span></div><div class="day"><span>S<span class="hidden-xs">at</span></span></div><div class="day"><span>S<span class="hidden-xs">un</span></span></div><br><span ng-repeat="date in month" class="date {{(((date.date | unixtimestamp) > (rangeStartDate.date | unixtimestamp)) && ((date.date | unixtimestamp) < (hoveringOnDay.date | unixtimestamp))) ? \'hovered-in-range\' : \'\'}}" ng-class="{\'next-or-prev-month\': date.nextMonth || date.prevMonth, \'selected\': date.selected, \'in-range\': date.inRange, \'unavailable\': date.unavailable}" ng-click="clickedDate(date)" ng-mouseover="hoveringDate(date)"><span>{{date.date | date: \'d\' }}</span></span><div class="clearfix"></div><hr></div></div>');
 }]);
 
 'use strict';
