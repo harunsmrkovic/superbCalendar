@@ -19,7 +19,12 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <superb-calendar ranges="bookingCalendar.ranges"></superb-calendar>
+    <div id="debug-wrap" ng-controller="debugCtrl">
+      <superb-calendar selected-ranges="bookingCalendar.ranges"></superb-calendar>
+      <br class="clb">
+      <hr>
+      <pre>{{bookingCalendar}}</pre>
+    </div>
 
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
@@ -30,6 +35,7 @@
         <!-- build:js({.tmp,app}) scripts/superbcalendar.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/superbcalendar.js"></script>
+        <script src="scripts/controllers/debugctrl.js"></script>
         <script src="scripts/directives/superbcalendar.js"></script>
         <script src="scripts/templates.js"></script>
         <script src="scripts/filters/unixtimestamp.js"></script>
