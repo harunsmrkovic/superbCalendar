@@ -98,30 +98,38 @@ angular.module('superbCalendar')
     $scope.$watchCollection('selectedRanges', function(ranges){
       angular.forEach(ranges, function(range){
         // js date
-        var startingDateTS = Date.parse(range.startDate);
-        var endingDateTS = Date.parse(range.endDate);
+        if((range.startDate && range.endDate) || range.date){
+          var startingDateTS = Date.parse(range.startDate);
+          var endingDateTS = Date.parse(range.endDate);
 
-        // safe check to see if user misbehaved and switched places for start and end date :)
-        if(startingDateTS > endingDateTS){
-          var tempDate = startingDateTS;
-          startingDateTS = endingDateTS;
-          endingDateTS = tempDate;
-          tempDate = undefined;
-        }
+          if(range.date){
+            startingDateTS = Date.parse(range.date);
+            endingDateTS = startingDateTS;
+          }
+          else {
+            // safe check to see if user misbehaved and switched places for start and end date :)
+            if(startingDateTS > endingDateTS){
+              var tempDate = startingDateTS;
+              startingDateTS = endingDateTS;
+              endingDateTS = tempDate;
+              tempDate = undefined;
+            }
+          }
 
-        // go through calendar and apply in-range flag wherever aplicable
-        angular.forEach($scope.calendar, function(month){
-          var dayInQ;
-          angular.forEach(month, function(day){
-            dayInQ = Date.parse(day.date);
-            if(startingDateTS === dayInQ || endingDateTS === dayInQ){
-              day.selected = true;
-            }
-            else if(startingDateTS < dayInQ && dayInQ < endingDateTS){
-              day.inRange = true;
-            }
+          // go through calendar and apply in-range flag wherever aplicable
+          angular.forEach($scope.calendar, function(month){
+            var dayInQ;
+            angular.forEach(month, function(day){
+              dayInQ = Date.parse(day.date);
+              if(startingDateTS === dayInQ || endingDateTS === dayInQ){
+                day.selected = true;
+              }
+              else if(startingDateTS < dayInQ && dayInQ < endingDateTS){
+                day.inRange = true;
+              }
+            });
           });
-        });
+        }
       });
     });
 
