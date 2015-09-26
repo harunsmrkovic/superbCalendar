@@ -67,9 +67,20 @@ angular.module('superbCalendar')
     }
 
     function clearSelectedDays(){
+      $scope.selectedDates = [];
       angular.forEach($scope.calendar, function(month){
         angular.forEach(month, function(day){
           day.selected = false;
+        });
+      });
+    }
+
+    function clearSelectedRanges(){
+      $scope.selectedRanges = [];
+      angular.forEach($scope.calendar, function(month){
+        angular.forEach(month, function(day){
+          day.selected = false;
+          day.inRange = false;
         });
       });
     }
@@ -83,7 +94,7 @@ angular.module('superbCalendar')
     $scope.calendar[$scope.currentMonth] = rawDaysInMonth($scope.currentMonth, 2015);
 
     // ranges are initialized here and this object shall be used when sending them to API
-    $scope.$watchCollection('ranges', function(ranges){
+    $scope.$watchCollection('selectedRanges', function(ranges){
       angular.forEach(ranges, function(range){
         // js date
         var startingDateTS = Date.parse(range.startDate);
@@ -130,23 +141,44 @@ angular.module('superbCalendar')
         return;
       }
 
-      // if multiple dates are not supported, clear all days
-      if(!$scope.multipleDates){
-        // clearSelectedDays();
-      }
-
-      // make it selected!
-      date.selected = true;
-
       // managing range
-      if($scope.ranges){
+      if($scope.selectedRanges){
+        // if no multiple range is supported, and some is already selected, clear it!
+        if(!$scope.multipleRanges && $scope.selectedRanges.length >= 1){
+          clearSelectedRanges();
+        }
+
+        // make the range selection
         if(!$scope.rangeStartDate){
+          date.selected = true;
           $scope.rangeStartDate = date;
         }
         else {
-          date.selected = true;
-          $scope.ranges.push({startDate: $scope.rangeStartDate.date, endDate: date.date});
+          $scope.selectedRanges.push({startDate: $scope.rangeStartDate.date, endDate: date.date});
           delete $scope.rangeStartDate;
+        }
+      }
+      // TODO: this should not be exclusive to one-another, but instead should be possible to have both range and single date (idea: make range doable by click-and-drag)
+      else if($scope.selectedDates) {
+        // if multiple, then manage the array
+        // TODO: can be rewritten in a shorter if
+        if($scope.multipleDates){
+          var alreadyPushed = $scope.selectedDates.indexOf(date);
+          if(~alreadyPushed){
+            date.selected = false;
+            $scope.selectedDates.splice(alreadyPushed, 1);
+          }
+          else {
+            // make it selected!
+            date.selected = true;
+            $scope.selectedDates.push(date);
+          }
+        }
+        else {
+          // if multiple dates are not supported, clear all days
+          clearSelectedDays();
+          date.selected = true;
+          $scope.selectedDates.push(date);
         }
       }
     };
