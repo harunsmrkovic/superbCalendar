@@ -97,7 +97,10 @@ angular.module('superbCalendar')
           var dayInQ;
           angular.forEach($scope.calendar[mi], function(day){
             dayInQ = Date.parse(day.date);
-            if(startingDateTS < dayInQ && dayInQ < endingDateTS){
+            if(startingDateTS === dayInQ || endingDateTS === dayInQ){
+              day.selected = true;
+            }
+            else if(startingDateTS < dayInQ && dayInQ < endingDateTS){
               day.inRange = true;
             }
           });
