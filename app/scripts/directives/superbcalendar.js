@@ -13,9 +13,10 @@ angular.module('superbCalendar')
       restrict: 'E',
       scope: {
         initialDate: '@', // start from this date (Y-m-d)
-        selectedDates: '=', // array holding all the selected single dates
+        selectedDates: '=', // array holding all the selected single dates and ranges
         allowRange: '@',
-        multipleDates: '@'// flag determining if multiple single dates are supported (true/ empty)
+        multipleDates: '@',
+        excludedDates: '='
       },
       controller: 'superbCalendarCtrl',
       link: function postLink(scope, element, attrs) {

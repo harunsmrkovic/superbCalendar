@@ -120,6 +120,28 @@ angular.module('superbCalendar')
       });
     });
 
+    if($scope.excludedDates.length){
+      angular.forEach($scope.excludedDates, function(eDate){
+        var startingDateTS = Date.parse(eDate.startDate);
+        var endingDateTS = Date.parse(eDate.endDate);
+
+        if(eDate.date){
+          startingDateTS = Date.parse(eDate.date);
+          endingDateTS = startingDateTS;
+        }
+
+        angular.forEach($scope.calendar, function(month){
+          var dayInQ;
+          angular.forEach(month, function(day){
+            dayInQ = Date.parse(day.date);
+            if(startingDateTS <= dayInQ && dayInQ <= endingDateTS){
+              day.unavailable = true;
+            }
+          });
+        });
+      });
+    }
+
     $scope.showPrevMonth = function(){
       $scope.currentMonth--;
       if($scope.currentMonth === 0){
