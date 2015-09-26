@@ -13,9 +13,8 @@ angular.module('superbCalendar')
       restrict: 'E',
       scope: {
         initialDate: '@', // start from this date (Y-m-d)
-        selectedRanges: '=', // array holding all the selected ranges
-        multipleRanges: '@', // flag determining if multiple ranges are supported (true/ empty)
         selectedDates: '=', // array holding all the selected single dates
+        allowRange: '@',
         multipleDates: '@'// flag determining if multiple single dates are supported (true/ empty)
       },
       controller: 'superbCalendarCtrl',
