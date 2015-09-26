@@ -1,0 +1,36 @@
+$superpurple: #5435ae;
+$lightpurple: #F4F1F9;
+
+$superlightgray:  #EFEFEF;
+$lightgray:       #D4D4D4;
+$gray:            #C4C4C4;
+
+
+.superb-calendar {
+  position: relative;
+  .days-wrap {
+    .day {
+      float: left;
+      padding: 0 10px;
+    }
+    display: block;
+  }
+  .date {
+    width: 14%;
+    float: left;
+    padding: 10px;
+    cursor: pointer;
+    &.next-or-prev-month {
+      opacity: 0.5;
+    }
+    &.selected {
+      background: $superpurple;
+    }
+    &.hovered-in-range, &.in-range {
+      background: $lightpurple;
+    }
+    &:hover {
+      background: $lightgray;
+    }
+  }
+}

@@ -446,17 +446,13 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
+      'angularTemplateCache',
       'wiredep',
       'concurrent:server',
       'autoprefixer:server',
       'connect:livereload',
       'watch'
     ]);
-  });
-
-  grunt.registerTask('server', 'DEPRECATED TASK. Use the "serve" task instead', function (target) {
-    grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
-    grunt.task.run(['serve:' + target]);
   });
 
   grunt.registerTask('test', [
@@ -478,7 +474,6 @@ module.exports = function (grunt) {
     'concat',
     'ngAnnotate',
     'copy:dist',
-    // 'uglify',
     'usemin',
     'htmlmin'
   ]);
