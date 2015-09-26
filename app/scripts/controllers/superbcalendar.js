@@ -180,29 +180,6 @@ angular.module('superbCalendar')
           delete $scope.rangeStartDate;
         }
       }
-      // TODO: this should not be exclusive to one-another, but instead should be possible to have both range and single date (idea: make range doable by click-and-drag)
-      // else if($scope.selectedDates) {
-      //   // if multiple, then manage the array
-      //   // TODO: can be rewritten in a shorter if
-      //   if($scope.multipleDates){
-      //     var alreadyPushed = $scope.selectedDates.indexOf(date);
-      //     if(~alreadyPushed){
-      //       date.selected = false;
-      //       $scope.selectedDates.splice(alreadyPushed, 1);
-      //     }
-      //     else {
-      //       // make it selected!
-      //       date.selected = true;
-      //       $scope.selectedDates.push(date);
-      //     }
-      //   }
-      //   else {
-      //     // if multiple dates are not supported, clear all days
-      //     clearSelectedDays();
-      //     date.selected = true;
-      //     $scope.selectedDates.push(date);
-      //   }
-      // }
     };
 
     $scope.hoveringDate = function(date){
