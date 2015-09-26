@@ -191,6 +191,11 @@ angular.module('superbCalendar')
             var startExDate = Date.parse(eDate.startDate);
             var endExDate = Date.parse(eDate.endDate);
 
+            if(eDate.date){
+              startExDate = Date.parse(eDate.date);
+              endExDate = startExDate;
+            }
+
             if(startExDate >= Date.parse($scope.rangeStartDate.date) && endExDate <= Date.parse(date.date)){
               forbidEntry = true;
             }
