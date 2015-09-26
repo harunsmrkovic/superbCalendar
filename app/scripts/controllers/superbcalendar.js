@@ -184,7 +184,7 @@ angular.module('superbCalendar')
     };
 
     $scope.hoveringDate = function(date){
-      if($scope.range && $scope.rangeStartDate){
+      if($scope.selectedRanges && $scope.rangeStartDate){
         $scope.hoveringOnDay = date;
       }
     };
