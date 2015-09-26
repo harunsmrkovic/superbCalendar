@@ -32,12 +32,14 @@ module.exports = function (grunt) {
         module: 'superbCalendar'
       },
       defaultOptions: {
+        options: {
+          htmlmin: {
+            collapseWhitespace: true
+          }
+        },
         src: 'views/**/*.html',
         dest: 'app/scripts/templates.js',
         cwd: '<%= yeoman.app %>'
-      },
-      htmlminNull: {
-        collapseWhitespace: true
       }
     },
 
@@ -268,7 +270,7 @@ module.exports = function (grunt) {
         flow: {
           html: {
             steps: {
-              js: ['concat', 'uglifyjs'],
+              js: ['concat'],
               css: ['cssmin']
             },
             post: {}
@@ -474,8 +476,9 @@ module.exports = function (grunt) {
     'concurrent:dist',
     'autoprefixer',
     'concat',
+    'ngAnnotate',
     'copy:dist',
-    'uglify',
+    // 'uglify',
     'usemin',
     'htmlmin'
   ]);

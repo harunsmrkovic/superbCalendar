@@ -8,7 +8,7 @@
  * Controller of the superbCalendarApp
  */
 angular.module('superbCalendar')
-  .controller('SuperbCalendarCtrl', function($scope, $log){
+  .controller('superbCalendarCtrl', function($scope, $log){
 
     // if there is no initial date, use Today
     if(!$scope.initialDate){
