@@ -32,6 +32,7 @@ angular.module('superbCalendar')
     }
 
     $scope.currentMonth = $scope.initialDate.getMonth()+1;
+    $scope.currentYear = $scope.initialDate.getFullYear();
     $scope.monthsDuration = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     $scope.allMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -104,7 +105,7 @@ angular.module('superbCalendar')
 
     // initialization of calendar (only the initial month is generated)
     $scope.calendar = {};
-    $scope.calendar[$scope.currentMonth] = rawDaysInMonth($scope.currentMonth, 2015);
+    $scope.calendar[$scope.currentYear+'-'+$scope.currentMonth] = rawDaysInMonth($scope.currentMonth, $scope.currentYear);
 
     // ranges are initialized here and this object shall be used when sending them to API
     $scope.$watchCollection('selectedRanges', function(ranges){
@@ -121,13 +122,10 @@ angular.module('superbCalendar')
           tempDate = undefined;
         }
 
-        // month
-        var startingMonth = getMonthFromString(range.startDate);
-        var endingMonth = getMonthFromString(range.endDate);
-
-        for(var mi = startingMonth; mi <= endingMonth; mi++){
+        // go through calendar and apply in-range flag wherever aplicable
+        angular.forEach($scope.calendar, function(month){
           var dayInQ;
-          angular.forEach($scope.calendar[mi], function(day){
+          angular.forEach(month, function(day){
             dayInQ = Date.parse(day.date);
             if(startingDateTS === dayInQ || endingDateTS === dayInQ){
               day.selected = true;
@@ -136,20 +134,26 @@ angular.module('superbCalendar')
               day.inRange = true;
             }
           });
-        }
+        });
       });
     });
 
     $scope.showPrevMonth = function(){
-      var followingMonth = $scope.currentMonth - 1;
-      if(!$scope.calendar[followingMonth]) {$scope.calendar[followingMonth] = rawDaysInMonth(followingMonth, 2015);}
       $scope.currentMonth--;
+      if($scope.currentMonth === 0){
+        $scope.currentYear--;
+        $scope.currentMonth = 12;
+      }
+      if(!$scope.calendar[$scope.currentYear+'-'+$scope.currentMonth]) {$scope.calendar[$scope.currentYear+'-'+$scope.currentMonth] = rawDaysInMonth($scope.currentMonth, 2015);}
     };
 
     $scope.showNextMonth = function(){
-      var followingMonth = $scope.currentMonth + 1;
-      if(!$scope.calendar[followingMonth]) {$scope.calendar[followingMonth] = rawDaysInMonth(followingMonth, 2015);}
       $scope.currentMonth++;
+      if($scope.currentMonth === 13){
+        $scope.currentYear++;
+        $scope.currentMonth = 1;
+      }
+      if(!$scope.calendar[$scope.currentYear+'-'+$scope.currentMonth]) {$scope.calendar[$scope.currentYear+'-'+$scope.currentMonth] = rawDaysInMonth($scope.currentMonth, 2015);}
     };
 
     $scope.clickedDate = function(date){
@@ -258,7 +262,7 @@ angular.module('superbCalendar')
 
 angular.module('superbCalendar').
 run(['$templateCache', function($templateCache) {
-  $templateCache.put('views/_calendar.html', '<div class="superb-calendar"><div class="days-wrap" ng-repeat="(monthNumber, month) in calendar" ng-show="monthNumber == currentMonth"><div class="day"><span>M<span class="hidden-xs">on</span></span></div><div class="day"><span>T<span class="hidden-xs">ue</span></span></div><div class="day"><span>W<span class="hidden-xs">ed</span></span></div><div class="day"><span>T<span class="hidden-xs">hu</span></span></div><div class="day"><span>F<span class="hidden-xs">ri</span></span></div><div class="day"><span>S<span class="hidden-xs">at</span></span></div><div class="day"><span>S<span class="hidden-xs">un</span></span></div><br><span ng-repeat="date in month" class="date {{(((date.date | unixtimestamp) > (rangeStartDate.date | unixtimestamp)) && ((date.date | unixtimestamp) < (hoveringOnDay.date | unixtimestamp))) ? \'hovered-in-range\' : \'\'}}" ng-class="{\'next-or-prev-month\': date.nextMonth || date.prevMonth, \'selected\': date.selected, \'in-range\': date.inRange}" ng-click="clickedDate(date)" ng-mouseover="hoveringDate(date)"><span>{{date.date | date: \'d\' }}</span></span><div class="clearfix"></div><hr></div></div>');
+  $templateCache.put('views/_calendar.html', '<div class="superb-calendar"><div class="days-wrap" ng-repeat="(monthNumber, month) in calendar" ng-show="monthNumber == currentYear+\'-\'+currentMonth"><div class="day"><span>M<span class="hidden-xs">on</span></span></div><div class="day"><span>T<span class="hidden-xs">ue</span></span></div><div class="day"><span>W<span class="hidden-xs">ed</span></span></div><div class="day"><span>T<span class="hidden-xs">hu</span></span></div><div class="day"><span>F<span class="hidden-xs">ri</span></span></div><div class="day"><span>S<span class="hidden-xs">at</span></span></div><div class="day"><span>S<span class="hidden-xs">un</span></span></div><br><span ng-repeat="date in month" class="date {{(((date.date | unixtimestamp) > (rangeStartDate.date | unixtimestamp)) && ((date.date | unixtimestamp) < (hoveringOnDay.date | unixtimestamp))) ? \'hovered-in-range\' : \'\'}}" ng-class="{\'next-or-prev-month\': date.nextMonth || date.prevMonth, \'selected\': date.selected, \'in-range\': date.inRange}" ng-click="clickedDate(date)" ng-mouseover="hoveringDate(date)"><span>{{date.date | date: \'d\' }}</span></span><div class="clearfix"></div><hr></div></div>');
 }]);
 
 'use strict';
