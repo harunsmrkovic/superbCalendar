@@ -16,7 +16,8 @@ angular.module('superbCalendar')
         selectedDates: '=', // array holding all the selected single dates and ranges
         allowRange: '@',
         multipleDates: '@',
-        excludedDates: '='
+        excludedDates: '=',
+        showControls: '@'
       },
       controller: 'superbCalendarCtrl',
       link: function postLink(scope, element, attrs) {
