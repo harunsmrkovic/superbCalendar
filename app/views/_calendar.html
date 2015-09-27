@@ -1,9 +1,7 @@
 <div class="superb-calendar">
   <div class="controls">
     <a ng-if="showControls" ng-click="showPrevMonth()"><i class="fa fa-angle-left"></i></a>
-    <div class="month-meta">
-      <i class="fa fa-calendar"></i> <span class="month-name">{{allMonths[currentMonth-1]}}</span> <span class="year">{{currentYear}}</span>
-    </div>
+    <i class="fa fa-calendar"></i> <span class="month-name">{{allMonths[currentMonth-1]}}</span> <span class="year">{{currentYear}}</span>
     <a ng-if="showControls" ng-click="showNextMonth()"><i class="fa fa-angle-right"></i></a>
   </div>
   <div class="days-wrap" ng-repeat="(monthNumber, month) in calendar" ng-show="monthNumber == currentYear+'-'+currentMonth">
