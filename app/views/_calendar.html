@@ -1,4 +1,7 @@
 <div class="superb-calendar">
+  <div class="month-meta">
+    <i class="fa fa-calendar"></i> <span class="month-name">{{allMonths[currentMonth-1]}}</span> <span class="year">{{currentYear}}</span>
+  </div>
   <div class="days-wrap" ng-repeat="(monthNumber, month) in calendar" ng-show="monthNumber == currentYear+'-'+currentMonth">
     <div class="day"><span>M<span class="hidden-xs">on</span></span></div>
     <div class="day"><span>T<span class="hidden-xs">ue</span></span></div>
