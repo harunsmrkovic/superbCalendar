@@ -183,6 +183,13 @@ angular.module('superbCalendar')
         if($scope.allowRange && !$scope.rangeStartDate){
           date.selected = true;
           $scope.rangeStartDate = date;
+          if($scope.fixedDuration){
+            var endDate = new Date();
+            endDate.setDate(new Date($scope.rangeStartDate.date).getDate() + parseInt($scope.fixedDuration));
+            endDate = [endDate.getFullYear(), endDate.getMonth() + 1, endDate.getDate()].join('-');
+            $scope.selectedDates.push({startDate: $scope.rangeStartDate.date, endDate: endDate});
+            delete $scope.rangeStartDate;
+          }
         }
         else {
           var forbidEntry = false;
