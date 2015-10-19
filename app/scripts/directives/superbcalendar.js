@@ -18,7 +18,9 @@ angular.module('superbCalendar')
         multipleDates: '@',
         excludedDates: '=',
         showControls: '@',
-        fixedDuration: '@'
+        fixedDuration: '@',
+        minDate: '@',
+        maxDate: '@'
       },
       controller: 'superbCalendarCtrl',
       link: function postLink(scope, element, attrs) {
