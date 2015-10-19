@@ -98,6 +98,28 @@ angular.module('superbCalendar')
         });
       }
 
+      if($scope.minDate){
+        var minDateTS = Date.parse($scope.minDate);
+        var dayInQ;
+        angular.forEach(dates, function(day){
+          dayInQ = Date.parse(day.date);
+          if(minDateTS >= dayInQ){
+            day.unavailable = true;
+          }
+        });
+      }
+
+      if($scope.maxDate){
+        var maxDateTS = Date.parse($scope.maxDate);
+        var dayInQ;
+        angular.forEach(dates, function(day){
+          dayInQ = Date.parse(day.date);
+          if(maxDateTS <= dayInQ){
+            day.unavailable = true;
+          }
+        });
+      }
+
       return dates;
     }
 
@@ -160,7 +182,7 @@ angular.module('superbCalendar')
         $scope.currentYear--;
         $scope.currentMonth = 12;
       }
-      if(!$scope.calendar[$scope.currentYear+'-'+$scope.currentMonth]) {$scope.calendar[$scope.currentYear+'-'+$scope.currentMonth] = rawDaysInMonth($scope.currentMonth, 2015);}
+      if(!$scope.calendar[$scope.currentYear+'-'+$scope.currentMonth]) {$scope.calendar[$scope.currentYear+'-'+$scope.currentMonth] = rawDaysInMonth($scope.currentMonth, $scope.currentYear);}
     };
 
     $scope.showNextMonth = function(){
@@ -169,7 +191,7 @@ angular.module('superbCalendar')
         $scope.currentYear++;
         $scope.currentMonth = 1;
       }
-      if(!$scope.calendar[$scope.currentYear+'-'+$scope.currentMonth]) {$scope.calendar[$scope.currentYear+'-'+$scope.currentMonth] = rawDaysInMonth($scope.currentMonth, 2015);}
+      if(!$scope.calendar[$scope.currentYear+'-'+$scope.currentMonth]) {$scope.calendar[$scope.currentYear+'-'+$scope.currentMonth] = rawDaysInMonth($scope.currentMonth, $scope.currentYear);}
     };
 
     $scope.clickedDate = function(date){
@@ -291,7 +313,9 @@ angular.module('superbCalendar')
         multipleDates: '@',
         excludedDates: '=',
         showControls: '@',
-        fixedDuration: '@'
+        fixedDuration: '@',
+        minDate: '@',
+        maxDate: '@'
       },
       controller: 'superbCalendarCtrl',
       link: function postLink(scope, element, attrs) {
