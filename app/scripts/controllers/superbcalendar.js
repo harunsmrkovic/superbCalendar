@@ -207,42 +207,21 @@ angular.module('superbCalendar')
           $scope.rangeStartDate = date;
         }
         else {
-          var forbidEntry = false;
-          // check if any of the selected dates overlap with the excludedDates
-          angular.forEach($scope.excludedDates, function(eDate){
-            var startExDate = Date.parse(eDate.startDate);
-            var endExDate = Date.parse(eDate.endDate);
-
-            if(eDate.date){
-              startExDate = Date.parse(eDate.date);
-              endExDate = startExDate;
-            }
-
-            if(startExDate >= Date.parse($scope.rangeStartDate.date) && endExDate <= Date.parse(date.date)){
-              forbidEntry = true;
-            }
-          });
-
           // either not a range (because start and end are same) or no range allowed, hence single date
-          if(!forbidEntry){
-            if(($scope.allowRange && $scope.rangeStartDate.date === date.date) || !$scope.allowRange){
-              // check, if this date is already defined, now delete it
-              var alreadyPushed = $scope.selectedDates.indexOf(date);
-              if(~alreadyPushed){
-                $scope.selectedDates.splice(alreadyPushed, 1);
-                date.selected = false;
-              }
-              else {
-                $scope.selectedDates.push(date);
-              }
+          if(($scope.allowRange && $scope.rangeStartDate.date === date.date) || !$scope.allowRange){
+            // check, if this date is already defined, now delete it
+            var alreadyPushed = $scope.selectedDates.indexOf(date);
+            if(~alreadyPushed){
+              $scope.selectedDates.splice(alreadyPushed, 1);
+              date.selected = false;
             }
-            // last date of range (push it!)
             else {
-              $scope.selectedDates.push({startDate: $scope.rangeStartDate.date, endDate: date.date});
+              $scope.selectedDates.push(date);
             }
           }
+          // last date of range (push it!)
           else {
-            $scope.rangeStartDate.selected = false;
+            $scope.selectedDates.push({startDate: $scope.rangeStartDate.date, endDate: date.date});
           }
           delete $scope.rangeStartDate;
         }
