@@ -18,7 +18,6 @@ angular.module('superbCalendar')
         multipleDates: '@',
         excludedDates: '=',
         showControls: '@',
-        fixedDuration: '@',
         minDate: '@',
         maxDate: '@'
       },
