@@ -133,9 +133,19 @@ angular.module('superbCalendar')
       });
     }
 
+    function getYearAndMonth(date){
+      var dateX = date.split('-');
+      dateX.pop();
+      return dateX;
+    }
+
+    function initializeMonth(month, year){
+      $scope.calendar[year+'-'+month] = rawDaysInMonth(month, year);
+    }
+
     // initialization of calendar (only the initial month is generated)
     $scope.calendar = {};
-    $scope.calendar[$scope.currentYear+'-'+$scope.currentMonth] = rawDaysInMonth($scope.currentMonth, $scope.currentYear);
+    initializeMonth($scope.currentMonth, $scope.currentYear);
 
     // ranges are initialized here and this object shall be used when sending them to API
     $scope.$watchCollection('selectedDates', function(ranges){
@@ -159,6 +169,23 @@ angular.module('superbCalendar')
             }
           }
 
+          // check if we have end date rendered already
+          if(range.startDate && range.endDate){
+            var startDateYM = getYearAndMonth(range.startDate);
+            if(!$scope.calendar[startDateYM.join('-')]){
+              $scope.calendar[startDateYM.join('-')] = rawDaysInMonth(startDateYM[1], startDateYM[0]);
+            }
+            var endDateYM = getYearAndMonth(range.endDate);
+            if(!$scope.calendar[endDateYM.join('-')]){
+              $scope.calendar[endDateYM.join('-')] = rawDaysInMonth(endDateYM[1], endDateYM[0]);
+            }
+          }
+          else if (range.date){
+            var dateYM = getYearAndMonth(range.date);
+            if(!$scope.calendar[dateYM.join('-')]){
+              $scope.calendar[dateYM.join('-')] = rawDaysInMonth(dateYM[1], dateYM[0]);
+            }
+          }
           // go through calendar and apply in-range flag wherever aplicable
           angular.forEach($scope.calendar, function(month){
             var dayInQ;
@@ -260,8 +287,8 @@ angular.module('superbCalendar')
 angular.module('superbCalendar')
   .controller('debugCtrl', function($scope, $log){
     $scope.bookingCalendar = {
-      busyDates: [{startDate: "2015-09-25",endDate: "2015-09-26"},{date: "2015-09-14"},{startDate: "2015-09-30",endDate: "2015-10-08"}],
-      dates: []
+      busyDates: [{startDate: "2015-09-25",endDate: "2015-09-26"}],
+      dates: [{date: "2015-10-24"}, {startDate: "2015-11-08",endDate: "2015-11-12"}]
     };
   });
 
