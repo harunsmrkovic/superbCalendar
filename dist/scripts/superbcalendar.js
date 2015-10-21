@@ -123,8 +123,8 @@ angular.module('superbCalendar')
       return dates;
     }
 
-    function clearSelectedDates(){
-      $scope.selectedDates = [];
+    function clearSelectedDates(justView){
+      if(typeof justView === 'undefined' && justView) $scope.selectedDates = [];
       angular.forEach($scope.calendar, function(month){
         angular.forEach(month, function(day){
           day.selected = false;
@@ -149,6 +149,7 @@ angular.module('superbCalendar')
 
     // ranges are initialized here and this object shall be used when sending them to API
     $scope.$watchCollection('selectedDates', function(ranges){
+      clearSelectedDates(true);
       angular.forEach(ranges, function(range){
         // js date
         if((range.startDate && range.endDate) || range.date){
@@ -233,8 +234,6 @@ angular.module('superbCalendar')
       else if(date.unavailable){
         return;
       }
-
-      $log.info(date);
 
       // managing range
       if($scope.selectedDates){
