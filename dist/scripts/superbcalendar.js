@@ -234,6 +234,8 @@ angular.module('superbCalendar')
         return;
       }
 
+      $log.info(date);
+
       // managing range
       if($scope.selectedDates){
         // if no multiple range is supported, and some is already selected, clear it!
@@ -256,7 +258,9 @@ angular.module('superbCalendar')
               date.selected = false;
             }
             else {
-              $scope.selectedDates.push(date);
+              if(!date.selected){
+                $scope.selectedDates.push(date);
+              }
             }
           }
           // last date of range (push it!)
