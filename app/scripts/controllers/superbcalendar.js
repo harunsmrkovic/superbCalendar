@@ -246,7 +246,10 @@ angular.module('superbCalendar')
                 clearSelectedDates();
               }
 
-              if(!date.selected){
+              if($scope.allowRange && date.selected){
+                $scope.selectedDates.push(date);
+              }
+              else if(!$scope.allowRange && !date.selected) {
                 $scope.selectedDates.push(date);
               }
 
