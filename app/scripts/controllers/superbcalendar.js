@@ -116,6 +116,8 @@ angular.module('superbCalendar')
         angular.forEach(month, function(day){
           day.selected = false;
           day.inRange = false;
+          day.inDuration = false;
+          day.selectedInDuration = false;
         });
       });
     }
@@ -224,8 +226,6 @@ angular.module('superbCalendar')
 
       // managing range
       if($scope.selectedDates){
-
-
         // make the range selection
         if($scope.allowRange && !$scope.rangeStartDate){
           date.selected = true;
@@ -241,6 +241,7 @@ angular.module('superbCalendar')
               date.selected = false;
             }
             else {
+              // THIS IS WHERE DATES GET PUSHED (selected)
               // if no multiple range is supported, and some is already selected, clear it!
               if(!$scope.multipleDates && $scope.selectedDates.length >= 1){
                 clearSelectedDates();
@@ -252,6 +253,11 @@ angular.module('superbCalendar')
               else if(!$scope.allowRange && !date.selected) {
                 $scope.selectedDates.push(date);
               }
+
+              // TODO: apply to the next month also
+              angular.forEach($scope.calendar[$scope.currentYear+'-'+$scope.currentMonth], function(day){
+                if(day.inDuration) day.selectedInDuration = true;
+              });
 
             }
           }
@@ -267,6 +273,16 @@ angular.module('superbCalendar')
     $scope.hoveringDate = function(date){
       if($scope.selectedDates && $scope.rangeStartDate){
         $scope.hoveringOnDay = date;
+      }
+      if(!$scope.selectedDates.length || $scope.multipleDates){
+        var iodate = $scope.calendar[$scope.currentYear+'-'+$scope.currentMonth].indexOf(date);
+        var duration = 10;
+        var maxdate = iodate + duration;
+        if(maxdate > $scope.calendar[$scope.currentYear+'-'+$scope.currentMonth].length-1){ maxdate = $scope.calendar[$scope.currentYear+'-'+$scope.currentMonth].length-1; }
+        angular.forEach($scope.calendar[$scope.currentYear+'-'+$scope.currentMonth], function(date){ date.inDuration = false; });
+        for(var i = iodate; i <= maxdate; i++){
+          if(!date.unavailable){ $scope.calendar[$scope.currentYear+'-'+$scope.currentMonth][i].inDuration = true; }
+        }
       }
     };
   });

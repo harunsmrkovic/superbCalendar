@@ -34,8 +34,9 @@ $gray:            #C4C4C4;
     &.hovered-in-range, &.in-range {
       background: $lightpurple;
     }
+
     &:hover {
-      background: $lightpurple;
+      background: $superpurple;
     }
     &.selected {
       background: $superpurple;
@@ -51,6 +52,15 @@ $gray:            #C4C4C4;
     &.unavailable {
       cursor: not-allowed;
       text-decoration: line-through;
+    }
+    &.hover-in-duration {
+      background: $lightpurple;
+      border-color: $superpurple;
+    }
+    &.selected-in-duration {
+      background: $superpurple;
+      border-color: $superpurple;
+      color: #fff;
     }
   }
 }
