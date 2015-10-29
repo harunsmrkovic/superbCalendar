@@ -287,10 +287,9 @@ angular.module('superbCalendar')
       if($scope.selectedDates && $scope.rangeStartDate){
         $scope.hoveringOnDay = date;
       }
-      if(!$scope.selectedDates.length || $scope.multipleDates){
+      if((!$scope.selectedDates.length || $scope.multipleDates) && $scope.fixedRangeDuration.length){
         var iodate = $scope.calendar[$scope.currentYear+'-'+$scope.currentMonth].indexOf(date);
-        var duration = 10;
-        var maxdate = iodate + duration;
+        var maxdate = iodate + parseInt($scope.fixedRangeDuration);
         if(maxdate > $scope.calendar[$scope.currentYear+'-'+$scope.currentMonth].length-1){ maxdate = $scope.calendar[$scope.currentYear+'-'+$scope.currentMonth].length-1; }
         angular.forEach($scope.calendar[$scope.currentYear+'-'+$scope.currentMonth], function(date){ date.inDuration = false; });
         for(var i = iodate; i <= maxdate; i++){
@@ -338,7 +337,8 @@ angular.module('superbCalendar')
         excludedDates: '=',
         showControls: '@',
         minDate: '@',
-        maxDate: '@'
+        maxDate: '@',
+        fixedRangeDuration: '@'
       },
       controller: 'superbCalendarCtrl',
       link: function postLink(scope, element, attrs) {
